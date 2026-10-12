@@ -12,6 +12,7 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace mf_dev_backend_2023.Controllers
 {
+    [Authorize(Roles = "Admin")]
     public class UsuariosController : Controller
     {
         private readonly AppDbContext _context;
@@ -27,12 +28,20 @@ namespace mf_dev_backend_2023.Controllers
             return View(await _context.Usuarios.ToListAsync());
         }
 
+        [AllowAnonymous]
+        public IActionResult AccessDenied()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
         public IActionResult Login()
         {
             return View();
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public async Task<IActionResult> Login(Usuario usuario)
         {
             var dados = await _context.Usuarios
@@ -40,7 +49,7 @@ namespace mf_dev_backend_2023.Controllers
 
             if (dados == null)
             {
-                ViewBag.Message = "Usuário e/ou senha invalidos!";
+                ViewBag.Message = "Usuário e/ou senha inválidos!";
                 return View();
             }
 
@@ -71,12 +80,13 @@ namespace mf_dev_backend_2023.Controllers
             }
             else
             {
-                ViewBag.Message = "Usuário e/ou senha invalidos!";
+                ViewBag.Message = "Usuário e/ou senha inválidos!";
             }
 
             return View();
         }
 
+        [AllowAnonymous]
         public async Task<IActionResult> Logout()
         {
             await HttpContext.SignOutAsync();
@@ -111,7 +121,6 @@ namespace mf_dev_backend_2023.Controllers
         // POST: Usuarios/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,Nome,Senha,Perfil")] Usuario usuario)
@@ -145,7 +154,6 @@ namespace mf_dev_backend_2023.Controllers
         // POST: Usuarios/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("Id,Nome,Senha,Perfil")] Usuario usuario)
@@ -198,7 +206,6 @@ namespace mf_dev_backend_2023.Controllers
         }
 
         // POST: Usuarios/Delete/5
-        
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

@@ -1,6 +1,6 @@
-using System.Diagnostics;
 using mf_dev_backend_2023.Models;
 using Microsoft.AspNetCore.Mvc;
+using System.Diagnostics;
 
 namespace mf_dev_backend_2023.Controllers
 {
@@ -15,7 +15,7 @@ namespace mf_dev_backend_2023.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            return RedirectToAction("Index", "Veiculos");
         }
 
         public IActionResult Privacy()
